@@ -1,0 +1,13 @@
+- hosts: all
+
+  vars:
+    certbot_certs: []
+      # - email: m@rcelko.ch
+      #   webroot: "/usr/share/nginx/html"
+      #   domains:
+      #     - rcelko.ch
+
+  roles:
+     - jnv.unattended-upgrades
+     - geerlingguy.nginx
+     - geerlingguy.certbot
