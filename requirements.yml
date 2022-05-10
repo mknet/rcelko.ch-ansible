@@ -2,3 +2,4 @@
 - name: jnv.unattended-upgrades
 - name: geerlingguy.nginx
 - name: geerlingguy.certbot
+- name: geerlingguy.docker
