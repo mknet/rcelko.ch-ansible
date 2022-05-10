@@ -6,8 +6,10 @@
       #   webroot: "/usr/share/nginx/html"
       #   domains:
       #     - rcelko.ch
+    certbot_install_method: snap
 
   roles:
      - jnv.unattended-upgrades
-     - geerlingguy.nginx
      - geerlingguy.certbot
+     - geerlingguy.nginx
+     - geerlingguy.docker
