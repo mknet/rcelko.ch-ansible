@@ -22,6 +22,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
     ansible.become = true
+    ansible.verbose = true
+    ansible.groups = {
+      "test" => ["default"],
+      "prod" => []
+    }
+
+
   end
 
   # Disable automatic box update checking. If you disable this, then
