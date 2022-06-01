@@ -1,12 +1,53 @@
 - hosts: all
 
   vars:
-    certbot_certs: []
-      # - email: m@rcelko.ch
-      #   webroot: "/usr/share/nginx/html"
-      #   domains:
-      #     - rcelko.ch
+    certbot_certs:
+      - email: m@rcelko.ch
+        webroot: "/usr/share/nginx/html"
+        domains:
+          - rcelko.ch
     certbot_install_method: snap
+    nginx_vhosts:
+      - listen: "80 http2"
+        server_name: "rcelko.ch"
+        #root: "/var/www/example.com"
+        #index: "index.php index.html index.htm"
+        #error_page: ""
+        #access_log: ""
+        #error_log: ""
+        #state: "present"
+        #template: "{{ nginx_vhost_template }}"
+        #filename: "example.com.conf"
+        extra_parameters: |
+          location ~ \.php$ {
+              fastcgi_split_path_info ^(.+\.php)(/.+)$;
+              fastcgi_pass unix:/var/run/php5-fpm.sock;
+              fastcgi_index index.php;
+              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              include fastcgi_params;
+          }
+          ssl_protocols       TLSv1.1 TLSv1.2;
+          ssl_ciphers         HIGH:!aNULL:!MD5;
+          ssl_certificate     /etc/ssl/certs/ssl-cert-snakeoil.pem;
+          ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+
+  pre_tasks:
+  - name: Install Python pip
+    apt: name={{ item }} update_cache=true state=present force_apt_get=yes
+    with_items:
+      - python3-pip
+  - name: Install python module cryptography
+    pip:
+      name: cryptography
+  - name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+    community.crypto.openssl_privatekey:
+      path: /etc/ssl/private/ansible.com.pem
+  - name: Generate a Self Signed OpenSSL certificate
+    community.crypto.x509_certificate:
+      path: /etc/ssl/certs/ansible.com.crt
+      privatekey_path: /etc/ssl/private/ansible.com.pem
+      # csr_path: /etc/ssl/certs/ansible.com.csr
+      provider: selfsigned
 
   roles:
      - jnv.unattended-upgrades

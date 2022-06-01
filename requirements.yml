@@ -1,5 +1,13 @@
-# from galaxy
-- name: jnv.unattended-upgrades
-- name: geerlingguy.nginx
-- name: geerlingguy.certbot
-- name: geerlingguy.docker
+---
+roles:
+  # Install a role from Ansible Galaxy.
+  - name: jnv.unattended-upgrades
+  - name: geerlingguy.nginx
+  - name: geerlingguy.certbot
+  - name: geerlingguy.docker
+
+collections:
+  # Install a collection from Ansible Galaxy.
+  - name: https://github.com/ansible-collections/community.crypto
+    type: git
+    version: main
