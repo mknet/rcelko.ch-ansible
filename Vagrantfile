@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
 
   config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 443, host: 8443
 
     #
   # Run Ansible from the Vagrant Host
@@ -27,6 +28,7 @@ Vagrant.configure("2") do |config|
       "test" => ["default"],
       "prod" => []
     }
+  end
 
 
   end
