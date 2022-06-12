@@ -52,7 +52,13 @@
      - jnv.unattended-upgrades
      - geerlingguy.nginx
 
-- name: Setup certbot & docker
+- name: Setup docker
+  hosts: all
+
+  roles:
+     - geerlingguy.docker
+
+- name: Setup certbot
   hosts: prod
 
   vars:
@@ -65,4 +71,3 @@
 
   roles:
      - geerlingguy.certbot
-     - geerlingguy.docker
