@@ -11,3 +11,4 @@ collections:
   - name: https://github.com/ansible-collections/community.crypto
     type: git
     version: main
+  - name: community.docker

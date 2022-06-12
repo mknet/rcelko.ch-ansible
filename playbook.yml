@@ -7,9 +7,12 @@
     apt: name={{ item }} update_cache=true state=present force_apt_get=yes
     with_items:
       - python3-pip
-  - name: Install python module cryptography
-    pip:
-      name: cryptography
+  - name: Install python modules
+    pip: name={{ item }}
+    with_items:
+      - cryptography
+      - docker
+      - docker-compose
   - name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
     community.crypto.openssl_privatekey:
       path: /etc/ssl/private/ansible.com.pem
@@ -71,3 +74,37 @@
 
   roles:
      - geerlingguy.certbot
+
+- name: Setup pleroma
+  hosts: all
+
+  tasks:
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: docker-pleroma
+      state: directory
+      mode: '0755'
+
+  - name: Copy Dockerfile
+    template:
+      src: docker-pleroma/config.exs
+      dest: docker-pleroma/.
+      mode: 0600    
+  
+  - name: Copy Dockerfile
+    template:
+      src: docker-pleroma/Dockerfile
+      dest: docker-pleroma/.
+      mode: 0600
+
+  - name: Copy compose source templates
+    template:
+      src: docker-pleroma/docker-compose.yml
+      dest: docker-pleroma/.
+      mode: 0600
+
+  - name: Run `docker-compose up` again
+    community.docker.docker_compose:
+      project_src: docker-pleroma
+      build: yes
+    register: output
